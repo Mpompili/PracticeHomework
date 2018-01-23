@@ -64,9 +64,7 @@ end
 # (gcd_of_last_digits(93, 9) = 3.gcd(9) => 3)
 # Bonus points if you use last_digit as a helper method.
 def gcd_of_last_digits(int_one, int_two)
-  x = last_digit(int_one)
-  y = last_digit(int_two)
-  x.gcd(y)
+  last_digit(int_one).gcd(last_digit(int_two))
 end
 
 # Write a method that returns the last n digits of its first argument,
@@ -75,8 +73,7 @@ end
 # (last_n_digits(1234, 2) => 34)
 # HINT: What is the return value of 1234 % 100? How about 4 % 100?
 def last_n_digits(num, n)
-  new_n = 10 ** n
-  num % new_n
+  num % (10**n)
 end
 
 
@@ -94,9 +91,7 @@ end
 # HINT: Use dec_remainder_of_two_floats as a helper method,
 # but don't forget to pass the proper type of argument
 def dec_remainder_of_two_integers(i_dividend, i_divisor)
-  new_i = i_dividend.to_f
-  new_d = i_divisor.to_f
-  dec_remainder_of_two_floats(new_i, new_d)
+  dec_remainder_of_two_floats(i_dividend.to_f, i_divisor.to_f)
 end
 
 
@@ -108,8 +103,5 @@ end
 # Assume the arguments are integers.
 # HINT: Use dec_remainder_of_two_integers as a helper method
 def int_remainder_without_modulo(i_dividend, i_divisor)
-  return i_dividend if i_dividend.to_i < i_divisor.to_i
-
-  (i_dividend.to_f / i_divisor).to_s.chars.first.to_i
-  end
+  (dec_remainder_of_two_integers(i_dividend, i_divisor) * i_divisor).round
 end
