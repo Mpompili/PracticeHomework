@@ -1,5 +1,3 @@
-require 'pry'
-
 class TowersOfHanoi
   attr_reader :towers
 
