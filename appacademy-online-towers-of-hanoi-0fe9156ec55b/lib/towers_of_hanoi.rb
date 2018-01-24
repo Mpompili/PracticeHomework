@@ -1,62 +1,69 @@
-
+require 'pry'
 
 class TowersOfHanoi
   attr_reader :towers
 
   def initialize
     @towers = [[3, 2, 1], [], []]
-    @win = @towers[0]
   end
 
   def move(from, to)
-    popped = @towers[from].pop
-    @towers[to].push(popped)
+    towers[to].push(towers[from].pop)
   end
 
   def valid_move?(from, to)
-    case
-    when from >= 3 || to >= 3 then false
-    when @towers[to].empty? then true
-    when @towers[from].empty? then false
-    when @towers[to].last > @towers[from].last then true
-    when @towers[from].last < @towers[to].last then false
+    if towers[from].empty?
+      return false
+    elsif !towers[to].empty? && towers[from].last > towers[to].last
+      return false
     end
+    true
   end
 
   def won?
-    @towers[1..-1].any? { |tower| tower == @win }
+    win = [3, 2, 1]
+    towers[1] == win || towers[2] == win
+  end
+
+  def take_turn
+    display
+    puts "\tpick your move.."
+    input = grab_input
+    move(input[0], input[1]) if valid_move?(input[0], input[1])
+  end
+
+  def grab_input
+    input = gets.chomp
+    [input[0].to_i, input[-1].to_i]
+  end
+
+  def finish
+    display
+    puts "\n" + '==='*12 + "\n"
+    puts "\tCongratulations for winning!"
   end
 
   def play
-    display
-
-    until won?
-      p "what tower do you want to move from?"
-      from = gets.chomp.to_i
-      p "what tower do you want to move to?"
-      to = gets.chomp.to_i
-      if valid_move?(from, to)
-        move(from, to)
-        display
-      else
-        display
-        p "Invalid move, do it again!"
-      end
-    end
-    p "you win!"
-  end
-
-  def render
-    'Tower 0:  ' + @towers[0].join(' ') + "\n" +
-    'Tower 1:  ' + @towers[1].join(' ') + "\n" +
-    'Tower 2:  ' + @towers[2].join(' ') + "\n"
+    take_turn until won?
+    finish
   end
 
   def display
-    # this moves everything up in the console so that whatever we print
-    # afterwards appears at the top
     system('clear')
-    puts render
+    puts '===' * 12 + "\n\n"
+    display_t(towers.map(&:reverse))
   end
 
+  def display_t ntower
+    puts "\t[ #{ntower[0][-3]} ]\t[ #{ntower[1][-3]} ]\t[ #{ntower[2][-3]} ]"
+    puts "\t[ #{ntower[0][-2]} ]\t[ #{ntower[1][-2]} ]\t[ #{ntower[2][-2]} ]"
+    puts "\t[ #{ntower[0][-1]} ]\t[ #{ntower[1][-1]} ]\t[ #{ntower[2][-1]} ]"
+    puts "\n" + '===' * 12
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  puts 'Ready for Towers of Hanoi? (y/n)'
+  TowersOfHanoi.new.play unless gets.chomp == 'n'
+  puts "\n\tThank you for playing!\n\n"
 end
